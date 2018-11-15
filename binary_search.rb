@@ -64,20 +64,70 @@ class Tree
 			node_print(node.left, (level + 1))
 			node_print(node.right, (level + 1))
 		end
-
 	end
 
-	# def node_print(node, string, level)
-	# 	puts "#{node.value}"
-	# 	if node.left == nil && node.right == nil
-	# 		return
-	# 	elsif node.right == nil
-	# 		node_print(node.left, string)
-	# 	else
-	# 		node_print(node.left, string)
-	# 		node_print(node.right, string)
-	# 	end
-	# end
+	def depth_search_stack(value)
+		stack = []
+		node = @head
+		stack << node
+		until node.value == value
+			if node == @head
+				if stack.include?(node.right) && stack.include?(node.left)
+					puts "none"
+					return nil
+				end
+			end
+			if node.left == nil && node.right == nil
+				node = node.parent
+			elsif node.left != nil && !stack.include?(node.left)
+				node = node.left
+				stack << node
+			elsif node.right != nil && !stack.include?(node.right)
+				node = node.right
+				stack << node
+			else
+				node = node.parent
+			end
+		end
+		return true
+	end
+
+
+	def depth_search_recursive(value)
+		node = @head
+		result = search_recursive(node, value) 
+		result != nil ? result.value : false
+		
+	end
+
+	def search_recursive(node, value)
+		if node.value == value 
+			return node
+		elsif node == nil
+			return nil
+		elsif node.right == nil && node.left == nil
+			return nil
+		else 
+			node_left = search_recursive(node.left, value) if node.left != nil
+			node_right = search_recursive(node.right, value) if node.right != nil
+		end
+
+		  if node_left != nil
+		  	node = node_left
+		  elsif node_right != nil
+		  	node = node_right
+		  else
+		  	return nil
+		  end
+
+		  return node
+
+		# if node_left != nil 
+		# 	return node_left.value
+		# elsif node_right != nil
+		# 	return node_right.value
+		# end
+	end
 end
 
 new_tree = Tree.new
@@ -85,6 +135,7 @@ new_tree.arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 new_tree.build_tree
 new_tree.print_tree
 puts new_tree.hash_store
+puts new_tree.depth_search_recursive(4)
 
 
 	
